@@ -56,20 +56,6 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
             holder.dialog_item_checkbox.setChecked(false);
         }
 
-        /*holder.dialog_item_checkbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (holder.dialog_item_checkbox.isChecked()) {
-                    MultiSelectDialog.selectedIdsForCallback.add(mDataSet.get(holder.getAdapterPosition()).getId());
-                    holder.dialog_item_checkbox.setChecked(true);
-                } else {
-                    removeFromSelection(mDataSet.get(holder.getAdapterPosition()).getId());
-                    holder.dialog_item_checkbox.setChecked(false);
-                }
-            }
-        });*/
-
 
         holder.main_container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,34 +102,6 @@ class MutliSelectAdapter extends RecyclerView.Adapter<MutliSelectAdapter.MultiSe
         }
         return false;
     }
-
-
-    /*//get selected name string seperated by coma
-    public String getDataString() {
-        String data = "";
-        for (int i = 0; i < mDataSet.size(); i++) {
-            if (checkForSelection(mDataSet.get(i).getId())) {
-                data = data + ", " + mDataSet.get(i).getName();
-            }
-        }
-        if (data.length() > 0) {
-            return data.substring(1);
-        } else {
-            return "";
-        }
-    }
-
-    //get selected name ararylist
-    public ArrayList<String> getSelectedNameList() {
-        ArrayList<String> names = new ArrayList<>();
-        for (int i = 0; i < mDataSet.size(); i++) {
-            if (checkForSelection(mDataSet.get(i).getId())) {
-                names.add(mDataSet.get(i).getName());
-            }
-        }
-        //  return names.toArray(new String[names.size()]);
-        return names;
-    }*/
 
 
     @Override

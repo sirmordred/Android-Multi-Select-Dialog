@@ -27,8 +27,10 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
     private float titleSize = 25;
     private String positiveText = "DONE";
     private String negativeText = "CANCEL";
-    private TextView dialogTitle, dialogSubmit, dialogCancel;
+    private String intermediateText = "SELECT ALL";
+    private TextView dialogTitle, dialogSubmit, dialogCancel, dialogSelectAll;
     private ArrayList<Integer> previouslySelectedIdsList = new ArrayList<>();
+    private boolean isAllSelected = false;
 
 
     private ArrayList<Integer> tempPreviouslySelectedIdsList = new ArrayList<>();
@@ -59,6 +61,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         dialogTitle =  dialog.findViewById(R.id.title);
         dialogSubmit =  dialog.findViewById(R.id.done);
         dialogCancel =  dialog.findViewById(R.id.cancel);
+        dialogSelectAll = dialog.findViewById(R.id.select_all_btn);
 
         mrecyclerView.setEmptyView(dialog.findViewById(R.id.list_empty1));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -66,6 +69,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
 
         dialogSubmit.setOnClickListener(this);
         dialogCancel.setOnClickListener(this);
+        dialogSelectAll.setOnClickListener(this);
 
         settingValues();
 
@@ -145,6 +149,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         dialogTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, titleSize);
         dialogSubmit.setText(positiveText.toUpperCase());
         dialogCancel.setText(negativeText.toUpperCase());
+        dialogSelectAll.setText(intermediateText.toUpperCase());
     }
 
     private ArrayList<MultiSelectModel> setCheckedIDS(ArrayList<MultiSelectModel> multiselectdata, ArrayList<Integer> listOfIdsSelected) {
@@ -194,7 +199,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
 
     @Override
     public void onClick(View view) {
-
         if (view.getId() == R.id.done) {
             ArrayList<Integer> callBackListOfIds = selectedIdsForCallback;
 
@@ -212,7 +216,7 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
                     String youCan = getResources().getString(R.string.you_can_only_select_upto);
                     String options = getResources().getString(R.string.options);
                     String option = getResources().getString(R.string.option);
-                    String message = "";
+                    String message;
 
                     if(this.maxSelectionMessage != null) {
                         message = maxSelectionMessage;
@@ -252,6 +256,25 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
             }
             dismiss();
         }
+
+        if (view.getId() == R.id.select_all_btn) {
+            if (isAllSelected) {
+                selectedIdsForCallback.clear();
+                for(int i=0;i<mainListOfAdapter.size();i++){
+                    mainListOfAdapter.get(i).setSelected(false);
+                }
+                isAllSelected = false;
+            } else {
+                selectedIdsForCallback.clear();
+                for(int i=0;i<mainListOfAdapter.size();i++){
+                    mainListOfAdapter.get(i).setSelected(true);
+                    selectedIdsForCallback.add(mainListOfAdapter.get(i).getId());
+                }
+                isAllSelected = true;
+            }
+            mutliSelectAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private String getSelectedDataString() {
@@ -286,10 +309,6 @@ public class MultiSelectDialog extends AppCompatDialogFragment implements Search
         }
         return false;
     }
-
-   /* public void setCallbackListener(SubmitCallbackListener submitCallbackListener) {
-        this.submitCallbackListener = submitCallbackListener;
-    }*/
 
     public interface SubmitCallbackListener {
         void onSelected(ArrayList<Integer> selectedIds, ArrayList<String> selectedNames, String commonSeperatedData);
